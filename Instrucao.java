@@ -18,34 +18,34 @@ public class Instrucao {
     public int funcao(int acc, Processo processo) {
         switch (getMnemonico()) {
             // aritmético
-            case "ADD": // nao pega os dados se for referencia para outra variavel
+            case "ADD":
                 if (modoImediato)
                     return acc + Integer.parseInt(getOperando());
                 else
-                    return acc + processo.getDados().get(operando.toLowerCase());
+                    return acc + processo.getDados().get(getOperando());
             case "SUB":
                 if (modoImediato)
                     return acc - Integer.parseInt(getOperando());
                 else
-                    return acc - processo.getDados().get(operando.toLowerCase());
+                    return acc - processo.getDados().get(getOperando());
             case "MUL":
                 if (modoImediato)
                     return acc * Integer.parseInt(getOperando());
                 else
-                    return acc * processo.getDados().get(operando.toLowerCase());
+                    return acc * processo.getDados().get(getOperando());
             case "DIV":
                 if (modoImediato)
                     return acc / Integer.parseInt(getOperando());
                 else
-                    return acc / processo.getDados().get(operando.toLowerCase());
+                    return acc / processo.getDados().get(getOperando());
             // memória
             case "LOAD":
                 if (modoImediato)
-                    return Integer.parseInt(operando);
+                    return Integer.parseInt(getOperando());
                 else
-                    return processo.getDados().get(operando.toLowerCase());
+                    return processo.getDados().get(getOperando());
             case "STORE":
-                processo.getDados().put(operando.toLowerCase(), acc);
+                processo.getDados().put(getOperando(), acc);
                 return acc;
             default:
                 return acc;
