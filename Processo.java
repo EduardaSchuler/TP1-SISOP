@@ -35,8 +35,7 @@ public class Processo {
 
     public void addDeadlineFromPrograma() {
         // logica de calculo de deadline a partir da quantidade de syscalls do programa
-        this.deadline = instrucoes.size(); // isso faz sentido? ou tem que ser a quantidade de syscalls * um valor pro
-                                           // clock
+        this.deadline = instrucoes.size(); // isso faz sentido? ou tem que ser a quantidade de syscalls * um valor prclock
         this.remainingTime = deadline;
         this.hardDeadline = arrivalTime + deadline;
     }
