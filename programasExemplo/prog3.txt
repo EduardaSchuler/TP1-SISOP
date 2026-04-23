@@ -1,9 +1,9 @@
 .code
-  syscall 2		    # digitar numero 2: acc<- 2
-  store numero		# pmem[numero] <- 2
+  syscall 2
+  store numero
 loop:
-  sub controle		# acc <- 2-2=0
-  BRZERO fim		  # salta
+  sub controle
+  BRZERO fim
   load numero
   div controle
   add b
@@ -17,9 +17,9 @@ loop:
   store controle
   BRANY loop
 fim:
-  load b		      # acc <- 3
-  syscall 1		    # print 3
-  syscall 0		    # exit
+  load b
+  syscall 1
+  syscall 0
 .endcode
 
 .data
