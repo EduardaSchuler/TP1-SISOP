@@ -18,8 +18,6 @@ public class Main {
             return;
         }
 
-        Arrays.sort(arquivos, (a, b) -> a.getName().compareTo(b.getName()));
-
         Carregador carregador = new Carregador();
         List<Processo> processos = new ArrayList<>();
 

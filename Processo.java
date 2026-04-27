@@ -2,9 +2,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Processo {
-    public enum ProcessState {
-        READY, RUNNING, WAIT, DONE
-    }
+    public enum ProcessState { READY, RUNNING, BLOCKED, DONE }
 
     private int arrivalTime;
     private int deadline;
@@ -27,8 +25,13 @@ public class Processo {
         this.labels = labels;
         this.state = ProcessState.READY;
         this.deadline = instrucoes.size();
+        for (Instrucao instrucao : instrucoes) {
+            if (instrucao.getMnemonico().equalsIgnoreCase("SYSCALL")) {
+                this.deadline = this.deadline + 2;
+            }
+        }
         this.remainingTime = instrucoes.size();
-        this.hardDeadline = arrivalTime + instrucoes.size();
+        this.hardDeadline = arrivalTime + deadline;
     }
 
     public void updateProcessState(ProcessState newState) {
@@ -44,12 +47,6 @@ public class Processo {
     }
 
     public int getDeadline() {
-        deadline = instrucoes.size();
-        for (Instrucao instrucao : instrucoes) {
-            if (instrucao.getMnemonico().equalsIgnoreCase("SYSCALL")) {
-                return deadline + 2;
-            }
-        }
         return deadline;
     }
 

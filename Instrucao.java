@@ -59,7 +59,7 @@ public class Instrucao {
                     // imprime acc e bloqueia
                     System.out.println("Acumulador: " + acc);
                     processo.setTempoEspera(tempoAtual + 1 + new Random().nextInt(3)); // +1 pra nao gerar um valor de 0
-                    processo.updateProcessState(Processo.ProcessState.WAIT);
+                    processo.updateProcessState(Processo.ProcessState.BLOCKED);
                 }
                 if (indice == 2) {
                     // lê valor e bloqueia
@@ -67,7 +67,7 @@ public class Instrucao {
                     Scanner scanner = new Scanner(System.in);
                     acc = scanner.nextInt();
                     processo.setTempoEspera(tempoAtual + 1 + new Random().nextInt(3)); // +1 pra nao gerar um valor de 0
-                    processo.updateProcessState(Processo.ProcessState.WAIT);
+                    processo.updateProcessState(Processo.ProcessState.BLOCKED);
                 }
                 return acc;
             case "BRANY":
