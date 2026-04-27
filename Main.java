@@ -18,20 +18,19 @@ public class Main {
             return;
         }
 
-        // ordena alfabeticamente para definir arrival time
         Arrays.sort(arquivos, (a, b) -> a.getName().compareTo(b.getName()));
 
+        Carregador carregador = new Carregador();
         List<Processo> processos = new ArrayList<>();
 
         for (int i = 0; i < arquivos.length; i++) {
-            System.out.println("Carregando: " + arquivos[i].getName() + " (arrivalTime=" + i + ")");
-            Processo p = new Processo(i); // arrival time = índice alfabético
-            p.carregarArquivo(arquivos[i].getPath());
+            Processo p = carregador.carregarArquivo(arquivos[i].getPath());
             processos.add(p);
-            System.out.println("  Ci=Pi=" + p.getDeadline() + " | instrucoes=" + p.getInstrucoes().size());
+            System.out.println("Carregado: " + arquivos[i].getName()
+                    + " | arrivalTime=" + p.getArrivalTime()
+                    + " | Ci=" + p.getDeadline());
         }
 
-        // aqui vai entrar o escalonador
         // EscalonadorEDF esc = new EscalonadorEDF();
         // esc.executar(processos);
     }
