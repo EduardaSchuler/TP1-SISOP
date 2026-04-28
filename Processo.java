@@ -2,8 +2,11 @@ import java.util.List;
 import java.util.Map;
 
 public class Processo {
-    public enum ProcessState { READY, RUNNING, BLOCKED, DONE }
+    public enum ProcessState {
+        READY, RUNNING, BLOCKED, DONE
+    }
 
+    private String nome;
     private int arrivalTime;
     private int deadline;
     private int remainingTime;
@@ -18,7 +21,8 @@ public class Processo {
     private Map<String, Integer> data;
     private Map<String, Integer> labels;
 
-    Processo(int arrivalTime, List<Instrucao> instrucoes, Map<String, Integer> data, Map<String, Integer> labels) {
+    Processo(String nome, int arrivalTime, List<Instrucao> instrucoes, Map<String, Integer> data, Map<String, Integer> labels) {
+        this.nome = nome;
         this.arrivalTime = arrivalTime;
         this.instrucoes = instrucoes;
         this.data = data;
@@ -40,6 +44,10 @@ public class Processo {
 
     public void decrementarRemainingTime() {
         this.remainingTime--;
+    }
+
+    public String getNome() {
+        return nome;
     }
 
     public int getArrivalTime() {

@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,6 +67,7 @@ public class Carregador {
         }
         br.close();
 
-        return new Processo(arrivalTime, instrucoes, data, labels);
+        String nomeArquivo = new File(caminho).getName();
+        return new Processo(nomeArquivo, arrivalTime, instrucoes, data, labels);
     }
 }

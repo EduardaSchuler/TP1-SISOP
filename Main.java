@@ -29,7 +29,7 @@ public class Main {
                     + " | Ci=" + p.getDeadline());
         }
 
-        // EscalonadorEDF esc = new EscalonadorEDF();
-        // esc.executar(processos);
+        EscalonadorEDF esc = new EscalonadorEDF(processos);
+        esc.executar();
     }
 }
