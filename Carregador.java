@@ -28,7 +28,7 @@ public class Carregador {
                 linha = br.readLine().trim();
                 while (!linha.equals(".endcode")) {
                     if (linha.contains(":")) {
-                        labels.put(linha.split(":")[0].trim().toLowerCase(), i);
+                        labels.put(linha.split(":")[0].trim().toUpperCase(), i);
                         linha = linha.split(":", 2)[1].trim();
                         if (linha.isEmpty())
                             continue;
@@ -37,9 +37,9 @@ public class Carregador {
                         if (!linha.isEmpty()) {
                             String[] partes = linha.split(" ", 2);
                             if (partes.length > 1) {
-                                instrucoes.add(new Instrucao(partes[0], partes[1].trim()));
+                                instrucoes.add(new Instrucao(partes[0].toUpperCase(), partes[1].trim()));
                             } else {
-                                instrucoes.add(new Instrucao(partes[0], ""));
+                                instrucoes.add(new Instrucao(partes[0].toUpperCase(), ""));
                             }
                             i++;
                         }

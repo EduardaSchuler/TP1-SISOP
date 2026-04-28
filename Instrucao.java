@@ -35,7 +35,7 @@ public class Instrucao {
                 if (modoImediato)
                     return acc * Integer.parseInt(getOperando());
                 else
-                    return acc * processo.getData().get(getOperando());
+                    return acc * processo.getData().get(getOperando().toUpperCase());
             case "DIV":
                 if (modoImediato)
                     return acc / Integer.parseInt(getOperando());
@@ -60,32 +60,35 @@ public class Instrucao {
                     System.out.println("Acumulador: " + acc);
                     processo.setTempoEspera(tempoAtual + 1 + new Random().nextInt(3)); // +1 pra nao gerar um valor de 0
                     processo.updateProcessState(Processo.ProcessState.BLOCKED);
+                    System.out.println("Processo " + processo.getNome() + " bloqueado para leitura. Acordará no tempo " + processo.getTempoEspera());
                 }
                 if (indice == 2) {
                     // lê valor e bloqueia
                     System.out.print("Digite um valor inteiro: ");
                     Scanner scanner = new Scanner(System.in);
-                    acc = scanner.nextInt();
+                    int aux = scanner.nextInt();
                     processo.setTempoEspera(tempoAtual + 1 + new Random().nextInt(3)); // +1 pra nao gerar um valor de 0
                     processo.updateProcessState(Processo.ProcessState.BLOCKED);
+                    System.out.println("Processo " + processo.getNome() + " bloqueado para leitura. Acordará no tempo " + processo.getTempoEspera());
                 }
                 return acc;
             case "BRANY":
-                processo.setPcAtual(processo.getLabels().get(getOperando()));
+                System.out.println("Desviando para " + getOperando());
+                processo.setPcAtual(processo.getLabels().get(getOperando().toUpperCase()));
                 return acc;
             case "BRPOS":
                 if (acc > 0) {
-                    processo.setPcAtual(processo.getLabels().get(getOperando()));
+                    processo.setPcAtual(processo.getLabels().get(getOperando().toUpperCase()));
                 }
                 return acc;
             case "BRZERO":
                 if (acc == 0) {
-                    processo.setPcAtual(processo.getLabels().get(getOperando()));
+                    processo.setPcAtual(processo.getLabels().get(getOperando().toUpperCase()));
                 }
                 return acc;
             case "BRNEG":
                 if (acc < 0) {
-                    processo.setPcAtual(processo.getLabels().get(getOperando()));
+                    processo.setPcAtual(processo.getLabels().get(getOperando().toUpperCase()));
                 }
                 return acc;
 
