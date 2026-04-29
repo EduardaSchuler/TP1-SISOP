@@ -38,6 +38,14 @@ public class Processo {
         this.hardDeadline = arrivalTime + deadline;
     }
 
+    public void reiniciarPeriodo(int novoHardDeadline) {
+        this.hardDeadline = novoHardDeadline;
+        this.remainingTime = this.deadline;
+        this.pcAtual = 0;
+        this.accAtual = 0;
+        this.state = ProcessState.READY;
+    }
+
     public void updateProcessState(ProcessState newState) {
         this.state = newState;
     }

@@ -3,33 +3,61 @@ import java.util.Comparator;
 import java.util.List;
 
 public class EscalonadorEDF {
+
     private List<Processo> processos;
     private List<Processo> filaProntos;
     private List<Processo> filaEspera;
 
     private int tempoAtual;
+    private Processo emExecucao;
 
     public EscalonadorEDF(List<Processo> processos) {
         this.processos = new ArrayList<>(processos);
         this.filaProntos = new ArrayList<>();
         this.filaEspera = new ArrayList<>();
         this.tempoAtual = 0;
+
+        for (Processo p : this.processos) {
+            p.updateProcessState(Processo.ProcessState.READY);
+            filaProntos.add(p);
+            System.out.println("Tempo 0: " + p.getNome()
+                    + " ativado | deadline absoluto = " + p.getHardDeadline());
+        }
     }
 
     public void executar() {
-        while (!todosFinalizados()) {
-            adicionarProcessosQueChegaram();
+        while (emExecucao != null || !filaProntos.isEmpty() || !filaEspera.isEmpty()) {
+            reativarPeriodos();
             desbloquearProcessos();
 
-            Processo processoAtual = escolherProcessoEDF();
+            if (emExecucao != null && !filaProntos.isEmpty()) {
+                filaProntos.sort(Comparator.comparingInt(Processo::getHardDeadline));
+                if (filaProntos.get(0).getHardDeadline() < emExecucao.getHardDeadline()) {
+                    System.out.println("Tempo " + tempoAtual + ": PREEMPÇÃO — "
+                            + emExecucao.getNome() + " (d=" + emExecucao.getHardDeadline()
+                            + ") preemptado por " + filaProntos.get(0).getNome()
+                            + " (d=" + filaProntos.get(0).getHardDeadline() + ")");
+                    emExecucao.updateProcessState(Processo.ProcessState.READY);
+                    filaProntos.add(emExecucao);
+                    emExecucao = null;
+                }
+            }
 
-            if (processoAtual == null) {
+            if (emExecucao == null) {
+                emExecucao = escolherProcessoEDF();
+            }
+
+            if (emExecucao == null) {
                 System.out.println("Tempo " + tempoAtual + ": CPU ociosa");
                 tempoAtual++;
                 continue;
             }
 
-            executarUmaInstrucao(processoAtual);
+            executarUmaInstrucao(emExecucao);
+
+            if (emExecucao.getState() != Processo.ProcessState.RUNNING) {
+                emExecucao = null;
+            }
 
             tempoAtual++;
         }
@@ -37,14 +65,14 @@ public class EscalonadorEDF {
         System.out.println("\nExecução finalizada no tempo " + tempoAtual);
     }
 
-    private void adicionarProcessosQueChegaram() {
+    private void reativarPeriodos() {
         for (Processo p : processos) {
-            if (p.getArrivalTime() == tempoAtual && p.getState() == Processo.ProcessState.READY) {
-                if (!filaProntos.contains(p)) {
-                    filaProntos.add(p);
-
-                    System.out.println("Tempo " + tempoAtual + ": processo " + p.getNome() + " chegou | deadline absoluto = " + p.getHardDeadline());
-                }
+            if (p.getState() == Processo.ProcessState.DONE && p.getRemainingTime() == 0) {
+                p.reiniciarPeriodo(tempoAtual + p.getDeadline());
+                filaProntos.add(p);
+                System.out.println("Tempo " + tempoAtual + ": " + p.getNome()
+                        + " reativado (novo período) | deadline absoluto = "
+                        + p.getHardDeadline());
             }
         }
     }
@@ -107,7 +135,10 @@ public class EscalonadorEDF {
             p.decrementarRemainingTime();
             filaEspera.add(p);
 
-            System.out.println("Tempo " + tempoAtual + ": processo " + p.getNome() + " bloqueado por SYSCALL");
+            System.out.println("Tempo " + tempoAtual + ": " + p.getNome()
+                    + " BLOQUEADO por syscall de I/O"
+                    + " (retoma em t=" + p.getTempoEspera()
+                    + ", PC=" + p.getPcAtual() + ")");
             return;
         }
 
@@ -117,24 +148,14 @@ public class EscalonadorEDF {
 
         p.decrementarRemainingTime();
 
-        if (p.getPcAtual() >= p.getInstrucoes().size()) {
+        if (p.getRemainingTime() <= 0 || p.getPcAtual() >= p.getInstrucoes().size()) { // [MOD] adicionado remainingTime
+                                                                                       // <= 0
             p.updateProcessState(Processo.ProcessState.DONE);
-
             System.out.println("Tempo " + tempoAtual + ": processo " + p.getNome() + " finalizado");
             return;
         }
 
         p.updateProcessState(Processo.ProcessState.READY);
         filaProntos.add(p);
-    }
-
-    private boolean todosFinalizados() {
-        for (Processo p : processos) {
-            if (p.getState() != Processo.ProcessState.DONE) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
