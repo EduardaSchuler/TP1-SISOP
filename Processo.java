@@ -34,7 +34,7 @@ public class Processo {
                 this.deadline = this.deadline + 2;
             }
         }
-        this.remainingTime = instrucoes.size();
+        this.remainingTime = this.deadline;
         this.hardDeadline = arrivalTime + deadline;
     }
 

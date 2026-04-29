@@ -26,7 +26,8 @@ public class Main {
             processos.add(p);
             System.out.println("Carregado: " + arquivos[i].getName()
                     + " | arrivalTime=" + p.getArrivalTime()
-                    + " | Ci=" + p.getDeadline());
+                    + " | Ci=" + p.getRemainingTime()
+                    + " | Pi=" + p.getDeadline());
         }
 
         EscalonadorEDF esc = new EscalonadorEDF(processos);

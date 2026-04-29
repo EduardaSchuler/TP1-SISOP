@@ -16,18 +16,11 @@ public class EscalonadorEDF {
         this.filaProntos = new ArrayList<>();
         this.filaEspera = new ArrayList<>();
         this.tempoAtual = 0;
-
-        for (Processo p : this.processos) {
-            p.updateProcessState(Processo.ProcessState.READY);
-            filaProntos.add(p);
-            System.out.println("Tempo 0: " + p.getNome()
-                    + " ativado | deadline absoluto = " + p.getHardDeadline());
-        }
     }
 
     public void executar() {
-        while (emExecucao != null || !filaProntos.isEmpty() || !filaEspera.isEmpty()) {
-            reativarPeriodos();
+        while (emExecucao != null || !filaProntos.isEmpty() || !filaEspera.isEmpty() || processosAguardando()) {
+            verificarChegadas();
             desbloquearProcessos();
 
             if (emExecucao != null && !filaProntos.isEmpty()) {
@@ -54,6 +47,7 @@ public class EscalonadorEDF {
             }
 
             executarUmaInstrucao(emExecucao);
+            reativarPeriodos();
 
             if (emExecucao.getState() != Processo.ProcessState.RUNNING) {
                 emExecucao = null;
@@ -156,5 +150,25 @@ public class EscalonadorEDF {
 
         p.updateProcessState(Processo.ProcessState.READY);
         filaProntos.add(p);
+    }
+
+    private void verificarChegadas() {
+        for (Processo p : processos) {
+            if (p.getArrivalTime() == tempoAtual
+                    && p.getState() == Processo.ProcessState.READY
+                    && !filaProntos.contains(p)) {
+                filaProntos.add(p);
+                System.out.println("Tempo " + tempoAtual + ": " + p.getNome()
+                        + " chegou | deadline absoluto = " + p.getHardDeadline());
+            }
+        }
+    }
+
+    private boolean processosAguardando() {
+        for (Processo p : processos) {
+            if (p.getArrivalTime() > tempoAtual)
+                return true;
+        }
+        return false;
     }
 }
