@@ -148,8 +148,7 @@ public class EscalonadorEDF {
 
         p.decrementarRemainingTime();
 
-        if (p.getRemainingTime() <= 0 || p.getPcAtual() >= p.getInstrucoes().size()) { // [MOD] adicionado remainingTime
-                                                                                       // <= 0
+        if (p.getRemainingTime() <= 0 || p.getPcAtual() >= p.getInstrucoes().size()) {
             p.updateProcessState(Processo.ProcessState.DONE);
             System.out.println("Tempo " + tempoAtual + ": processo " + p.getNome() + " finalizado");
             return;
